@@ -1,6 +1,6 @@
 package main
 
-import "github.com/l-lin/trello-work-log/cmd"
+import "github.com/l-lin/trello-daily-logs/cmd"
 
 func main() {
 	cmd.Execute(version, buildDate)
