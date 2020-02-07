@@ -38,13 +38,18 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 			},
 			expected: fmt.Sprintf(`## %s %02d
 
-- ABANDONED
-  - api@spec: write OpenAPI specifications
-- PERSO
-  - career@interview: find good questions for interview
-- WORK
-  - api@gravitee: install in prod environment
-  - api@spec: write OpenAPI specifications
+**ABANDONED**
+
+- api@spec: write OpenAPI specifications
+
+**PERSO**
+
+- career@interview: find good questions for interview
+
+**WORK**
+
+- api@gravitee: install in prod environment
+- api@spec: write OpenAPI specifications
 
 `, time.Now().Weekday(), time.Now().Day()),
 		},
@@ -59,8 +64,9 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 			},
 			expected: fmt.Sprintf(`## %s %02d
 
-- PERSO
-  - career@interview: find good questions for interview
+**PERSO**
+
+- career@interview: find good questions for interview
 
 `, time.Now().Weekday(), time.Now().Day()),
 		},
@@ -75,7 +81,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 			actual := bytes.NewBufferString("")
 			p.Print(actual, tt.given)
 			if actual.String() != tt.expected {
-				t.Errorf("expected %v, actual %v", tt.expected, actual)
+				t.Errorf("expected:\n%v\nactual:\n%v", tt.expected, actual)
 			}
 		})
 	}

@@ -42,14 +42,14 @@ func (p MarkdownPrinter) Print(writer io.Writer, cards []trello.Card) error {
 	b.WriteString(fmt.Sprintf("## %s %02d\n\n", now.Weekday(), now.Day()))
 
 	for _, label := range labels {
-		b.WriteString(fmt.Sprintf("- %s\n", label))
+		b.WriteString(fmt.Sprintf("**%s**\n\n", label))
 		for _, card := range cards {
 			if card.ContainLabel(label) {
-				b.WriteString(fmt.Sprintf("  - %s\n", card.Name))
+				b.WriteString(fmt.Sprintf("- %s\n", card.Name))
 			}
 		}
+		b.WriteString("\n")
 	}
-	b.WriteString("\n")
 
 	if _, err := writer.Write([]byte(b.String())); err != nil {
 		return err

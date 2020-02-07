@@ -48,10 +48,7 @@ Add to the crontab:
 
 ```bash
 # If you want to directly write into a file
-55 17 * * 1-4 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /var/log/trello-daily-logs.log
-55 16 * * 5 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /var/log/trello-daily-logs.log
-# If you want to use shell command and prepend to a file
-55 17 * * 1-4 local folder="/home/llin/perso/daily-logs/$(date +%Y)" && mkdir -p "${folder}" && touch "${folder}/$(date +%m).md" && printf '%s\n\n%s' "$(/home/llin/go/bin/trello-daily-logs)" "$(cat ${folder}/$(date +%m).md)" > ${folder}/$(date +%m).md
-55 16 * * 5 local folder="/home/llin/perso/daily-logs/$(date +%Y)" && mkdir -p "${folder}" && touch "${folder}/$(date +%m).md" && printf '%s\n\n%s' "$(/home/llin/go/bin/trello-daily-logs)" "$(cat ${folder}/$(date +%m).md)" > ${folder}/$(date +%m).md
+55 17 * * 1-4 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /tmp/trello-daily-logs.log
+55 16 * * 5 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /tmp/trello-daily-logs.log
 ```
 
