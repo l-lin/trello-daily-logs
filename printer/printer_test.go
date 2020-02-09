@@ -93,6 +93,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 - projectB@taskB: implement solution
 
 </details>
+
 `,
 		},
 		"one done card": {
@@ -137,6 +138,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 - career@interview: find good questions for interview
 
 </details>
+
 `,
 		},
 		"no card": {

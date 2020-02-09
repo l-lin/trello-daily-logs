@@ -21,6 +21,7 @@ const (
 <summary>UNFINISHED</summary>
 {{template "cards" .TodoMap}}
 </details>
+
 {{end}}`
 )
 

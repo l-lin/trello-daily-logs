@@ -22,6 +22,20 @@ This CLI is used to:
   - api@gravitee: install in prod environment
   - api@spec: write OpenAPI specifications
 
+<details>
+<summary>UNFINISHED</summary>
+
+**PERSO**
+
+- shopping: buy milk
+
+**WORK**
+
+- projectA@taskA: study solutions
+- projectB@taskB: implement solution
+
+</details>
+
 ```
 
 ## Getting started
