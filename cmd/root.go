@@ -58,24 +58,37 @@ func run(cmd *cobra.Command, args []string) {
 	listTodoID := configuration.GetListTodoID()
 	key := configuration.GetKey()
 	token := configuration.GetToken()
-	doneCards, err := trello.GetCards(listDoneID, key, token)
-	if err != nil {
-		log.Fatal(err)
+	doneCardsCh := make(chan getCardsResult)
+	todoCardsCh := make(chan getCardsResult)
+	go getCards(listDoneID, key, token, doneCardsCh)
+	go getCards(listTodoID, key, token, todoCardsCh)
+	doneCardsResult := <-doneCardsCh
+	todoCardsResult := <-todoCardsCh
+
+	if doneCardsResult.err != nil {
+		log.Fatal(doneCardsResult.err)
 	}
-	todoCards, err := trello.GetCards(listTodoID, key, token)
-	if err != nil {
-		log.Fatal(err)
+	if todoCardsResult.err != nil {
+		log.Fatal(todoCardsResult.err)
 	}
 	p := printer.NewMarkdownPrinter(time.Now())
 	if format == "file" {
-		if err := worklog.Write(p, doneCards, todoCards, configuration.GetOutputFolder()); err != nil {
+		if err := worklog.Write(p, doneCardsResult.cards, todoCardsResult.cards, configuration.GetOutputFolder()); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		if err := p.Print(os.Stdout, doneCards, todoCards); err != nil {
+		if err := p.Print(os.Stdout, doneCardsResult.cards, todoCardsResult.cards); err != nil {
 			log.Fatal(err)
 		}
 	}
+}
+
+func getCards(listID, key, token string, cardsResultCh chan getCardsResult) {
+	cards, err := trello.GetCards(listID, key, token)
+	if err != nil {
+		cardsResultCh <- getCardsResult{err: err}
+	}
+	cardsResultCh <- getCardsResult{cards: cards}
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -117,4 +130,9 @@ func initConfig() {
 type cliBuild struct {
 	Version   string `json:"version"`
 	BuildDate string `json:"buildDate"`
+}
+
+type getCardsResult struct {
+	cards []trello.Card
+	err   error
 }
