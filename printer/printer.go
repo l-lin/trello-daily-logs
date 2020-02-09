@@ -1,59 +1,77 @@
 package printer
 
 import (
-	"fmt"
 	"io"
-	"sort"
-	"strings"
+	"text/template"
 	"time"
 
 	"github.com/l-lin/trello-daily-logs/trello"
 )
 
-var now = time.Now()
+const (
+	cardsTpl = `{{define "cards"}}{{range $k, $v := .}}
+**{{$k}}**
+
+{{range $v}}- {{.Name}}
+{{end}}{{end}}{{end}}`
+
+	allCardsTpl = `## {{.T.Weekday}} {{printf "%02d" .T.Day}}
+{{if .DoneMap}}{{template "cards" .DoneMap}}{{end}}
+{{if .TodoMap}}<details>
+<summary>UNFINISHED</summary>
+{{template "cards" .TodoMap}}
+</details>
+{{end}}`
+)
 
 // Printer prints cards
 type Printer interface {
-	Print(writer io.Writer, cards []trello.Card) error
+	Print(writer io.Writer, cardsDone, cardsTodo []trello.Card) error
 }
 
 // MarkdownPrinter prints in markdown
 type MarkdownPrinter struct {
+	t time.Time
+}
+
+// NewMarkdownPrinter creates a new trello cards printer that prints in markdown format
+func NewMarkdownPrinter(t time.Time) Printer {
+	return MarkdownPrinter{t: t}
 }
 
 // Print the cards in markdown format
-func (p MarkdownPrinter) Print(writer io.Writer, cards []trello.Card) error {
-	if len(cards) == 0 {
+func (p MarkdownPrinter) Print(writer io.Writer, doneCards, todoCards []trello.Card) error {
+	if len(doneCards) == 0 && len(todoCards) == 0 {
 		return nil
 	}
-	var b strings.Builder
-	labelsMap := map[string]bool{}
-	labels := []string{}
-	for _, card := range cards {
-		for _, label := range card.Labels {
-			if !labelsMap[label.Name] {
-				labelsMap[label.Name] = true
-				labels = append(labels, label.Name)
-			}
-		}
+
+	tpl := template.Must(template.New("all-cards").Parse(allCardsTpl))
+	tpl = template.Must(tpl.Parse(cardsTpl))
+	tplParams := struct {
+		T       time.Time
+		DoneMap map[string][]trello.Card
+		TodoMap map[string][]trello.Card
+	}{
+		T:       p.t,
+		DoneMap: toMap(doneCards),
+		TodoMap: toMap(todoCards),
 	}
-	sort.Strings(labels)
-
-	b.WriteString(fmt.Sprintf("## %s %02d\n\n", now.Weekday(), now.Day()))
-
-	for _, label := range labels {
-		b.WriteString(fmt.Sprintf("**%s**\n\n", label))
-		for _, card := range cards {
-			if card.ContainLabel(label) {
-				b.WriteString(fmt.Sprintf("- %s\n", card.Name))
-			}
-		}
-		b.WriteString("\n")
-	}
-
-	if _, err := writer.Write([]byte(b.String())); err != nil {
+	if err := tpl.Execute(writer, tplParams); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func toMap(cards []trello.Card) map[string][]trello.Card {
+	m := map[string][]trello.Card{}
+	for _, card := range cards {
+		for _, label := range card.Labels {
+			if _, ok := m[label.Name]; !ok {
+				m[label.Name] = []trello.Card{}
+			}
+			m[label.Name] = append(m[label.Name], card)
+		}
+	}
+	return m
 }

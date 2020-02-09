@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/l-lin/trello-daily-logs/configuration"
 	"github.com/l-lin/trello-daily-logs/printer"
@@ -53,20 +54,25 @@ func init() {
 }
 
 func run(cmd *cobra.Command, args []string) {
-	listID := configuration.GetListID()
+	listDoneID := configuration.GetListDoneID()
+	listTodoID := configuration.GetListTodoID()
 	key := configuration.GetKey()
 	token := configuration.GetToken()
-	cards, err := trello.GetCards(listID, key, token)
+	doneCards, err := trello.GetCards(listDoneID, key, token)
 	if err != nil {
 		log.Fatal(err)
 	}
+	todoCards, err := trello.GetCards(listTodoID, key, token)
+	if err != nil {
+		log.Fatal(err)
+	}
+	p := printer.NewMarkdownPrinter(time.Now())
 	if format == "file" {
-		if err := worklog.Write(cards, configuration.GetOutputFolder()); err != nil {
+		if err := worklog.Write(p, doneCards, todoCards, configuration.GetOutputFolder()); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		p := printer.MarkdownPrinter{}
-		if err := p.Print(os.Stdout, cards); err != nil {
+		if err := p.Print(os.Stdout, doneCards, todoCards); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -95,8 +101,8 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		listID := configuration.GetListID()
-		if listID == "" {
+		listDoneID := configuration.GetListDoneID()
+		if listDoneID == "" {
 			log.Printf("Could not read the properties. Initializing them in %s", cfgFile)
 			configuration.InitConfig(cfgFile)
 			viper.ReadInConfig()

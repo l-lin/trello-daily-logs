@@ -2,7 +2,6 @@ package printer
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 	"time"
 
@@ -10,33 +9,63 @@ import (
 )
 
 func TestMarkdownPrinter_Print(t *testing.T) {
+	ti, err := time.Parse(time.RFC3339, "2020-02-09T11:12:13Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+	type given struct {
+		doneCards []trello.Card
+		todoCards []trello.Card
+	}
 	var tests = map[string]struct {
-		given    []trello.Card
+		given    given
 		expected string
 	}{
 		"multiple cards": {
-			given: []trello.Card{
-				trello.Card{
-					Name: "career@interview: find good questions for interview",
-					Labels: []trello.Label{
-						trello.Label{Name: "PERSO"},
+			given: given{
+				doneCards: []trello.Card{
+					trello.Card{
+						Name: "career@interview: find good questions for interview",
+						Labels: []trello.Label{
+							trello.Label{Name: "PERSO"},
+						},
+					},
+					trello.Card{
+						Name: "api@gravitee: install in prod environment",
+						Labels: []trello.Label{
+							trello.Label{Name: "WORK"},
+						},
+					},
+					trello.Card{
+						Name: "api@spec: write OpenAPI specifications",
+						Labels: []trello.Label{
+							trello.Label{Name: "WORK"},
+							trello.Label{Name: "ABANDONED"},
+						},
 					},
 				},
-				trello.Card{
-					Name: "api@gravitee: install in prod environment",
-					Labels: []trello.Label{
-						trello.Label{Name: "WORK"},
+				todoCards: []trello.Card{
+					trello.Card{
+						Name: "projectA@taskA: study solutions",
+						Labels: []trello.Label{
+							trello.Label{Name: "WORK"},
+						},
 					},
-				},
-				trello.Card{
-					Name: "api@spec: write OpenAPI specifications",
-					Labels: []trello.Label{
-						trello.Label{Name: "WORK"},
-						trello.Label{Name: "ABANDONED"},
+					trello.Card{
+						Name: "shopping: buy milk",
+						Labels: []trello.Label{
+							trello.Label{Name: "PERSO"},
+						},
+					},
+					trello.Card{
+						Name: "projectB@taskB: implement solution",
+						Labels: []trello.Label{
+							trello.Label{Name: "WORK"},
+						},
 					},
 				},
 			},
-			expected: fmt.Sprintf(`## %s %02d
+			expected: `## Sunday 09
 
 **ABANDONED**
 
@@ -51,35 +80,81 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 - api@gravitee: install in prod environment
 - api@spec: write OpenAPI specifications
 
-`, time.Now().Weekday(), time.Now().Day()),
+<details>
+<summary>UNFINISHED</summary>
+
+**PERSO**
+
+- shopping: buy milk
+
+**WORK**
+
+- projectA@taskA: study solutions
+- projectB@taskB: implement solution
+
+</details>
+`,
 		},
-		"one cards": {
-			given: []trello.Card{
-				trello.Card{
-					Name: "career@interview: find good questions for interview",
-					Labels: []trello.Label{
-						trello.Label{Name: "PERSO"},
+		"one done card": {
+			given: given{
+				doneCards: []trello.Card{
+					trello.Card{
+						Name: "career@interview: find good questions for interview",
+						Labels: []trello.Label{
+							trello.Label{Name: "PERSO"},
+						},
 					},
 				},
+				todoCards: []trello.Card{},
 			},
-			expected: fmt.Sprintf(`## %s %02d
+			expected: `## Sunday 09
 
 **PERSO**
 
 - career@interview: find good questions for interview
 
-`, time.Now().Weekday(), time.Now().Day()),
+`,
+		},
+		"one todo card": {
+			given: given{
+				doneCards: []trello.Card{},
+				todoCards: []trello.Card{
+					trello.Card{
+						Name: "career@interview: find good questions for interview",
+						Labels: []trello.Label{
+							trello.Label{Name: "PERSO"},
+						},
+					},
+				},
+			},
+			expected: `## Sunday 09
+
+<details>
+<summary>UNFINISHED</summary>
+
+**PERSO**
+
+- career@interview: find good questions for interview
+
+</details>
+`,
 		},
 		"no card": {
-			given:    []trello.Card{},
+			given: given{
+				doneCards: []trello.Card{},
+				todoCards: []trello.Card{},
+			},
 			expected: "",
 		},
 	}
-	p := MarkdownPrinter{}
+	p := MarkdownPrinter{t: ti}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			actual := bytes.NewBufferString("")
-			p.Print(actual, tt.given)
+			err := p.Print(actual, tt.given.doneCards, tt.given.todoCards)
+			if err != nil {
+				t.Fatalf("err: %v", err)
+			}
 			if actual.String() != tt.expected {
 				t.Errorf("expected:\n%v\nactual:\n%v", tt.expected, actual)
 			}

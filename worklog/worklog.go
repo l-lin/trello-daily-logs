@@ -13,7 +13,7 @@ import (
 var now = time.Now()
 
 // Write the cards in the work log file
-func Write(cards []trello.Card, outputFolder string) error {
+func Write(p printer.Printer, doneCards, todoCards []trello.Card, outputFolder string) error {
 	if !exists(outputFolder) {
 		return fmt.Errorf("Folder '%s' does not exists", outputFolder)
 	}
@@ -31,8 +31,7 @@ func Write(cards []trello.Card, outputFolder string) error {
 	defer f.Close()
 
 	log.Printf("Writing content to '%s'\n", outputFolder)
-	p := printer.MarkdownPrinter{}
-	if err = p.Print(f, cards); err != nil {
+	if err = p.Print(f, doneCards, todoCards); err != nil {
 		return err
 	}
 	return nil

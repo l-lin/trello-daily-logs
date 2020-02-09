@@ -12,15 +12,25 @@ import (
 )
 
 const (
-	listIDKey       = "list-id"
+	listIDsKey      = "list-ids"
 	keyKey          = "key"
 	tokenKey        = "token"
 	outputFolderKey = "output-folder"
 )
 
-// GetListID from the configuration file
-func GetListID() string {
-	return viper.GetString(listIDKey)
+var (
+	listDoneIDKey = listIDsKey + ".done"
+	listTodoIDKey = listIDsKey + ".todo"
+)
+
+// GetListDoneID from the configuration file
+func GetListDoneID() string {
+	return viper.GetString(listDoneIDKey)
+}
+
+// GetListTodoID from the configuration file
+func GetListTodoID() string {
+	return viper.GetString(listTodoIDKey)
 }
 
 // GetKey from the configuration file
@@ -41,10 +51,18 @@ func GetOutputFolder() string {
 // InitConfig initialize the cli configuration
 func InitConfig(cfgFile string) {
 	prompt := promptui.Prompt{
-		Label:    "List ID",
+		Label:    "Your DONE list ID",
 		Validate: validateEmpty,
 	}
-	listID, err := prompt.Run()
+	listDoneID, err := prompt.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	prompt = promptui.Prompt{
+		Label:    "Your TODO list ID",
+		Validate: validateEmpty,
+	}
+	listTodoID, err := prompt.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -77,8 +95,10 @@ func InitConfig(cfgFile string) {
 	cfgContent := []byte(fmt.Sprintf(`%s: %s
 %s: %s
 %s: %s
+%s: %s
 %s: %s`,
-		listIDKey, listID,
+		listDoneIDKey, listDoneID,
+		listTodoIDKey, listTodoID,
 		keyKey, key,
 		tokenKey, token,
 		outputFolderKey, outputFolder,
