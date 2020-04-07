@@ -12,7 +12,15 @@ const (
 	cardsTpl = `{{define "cards"}}{{range $k, $v := .}}
 **{{$k}}**
 
-{{range $v}}- {{.Name}}
+{{range $v}}- {{.Name}}{{if .Desc}}
+
+<details>
+<summary>description</summary>
+
+{{.Desc}}
+
+</details>
+{{end}}
 {{end}}{{end}}{{end}}`
 
 	allCardsTpl = `## {{.T.Weekday}} {{printf "%02d" .T.Day}}

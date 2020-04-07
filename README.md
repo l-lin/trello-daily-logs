@@ -14,13 +14,29 @@ This CLI is used to:
 ```md
 ## Thursday 06
 
-- ABANDONED
-  - api@spec: write OpenAPI specifications
-- PERSO
-  - career@interview: find good questions for interview
-- WORK
-  - api@gravitee: install in prod environment
-  - api@spec: write OpenAPI specifications
+**ABANDONED**
+
+- api@spec: write OpenAPI specifications
+
+**PERSO**
+
+- career@interview: find good questions for interview
+
+**WORK**
+
+- api@gravitee: install in prod environment
+
+<details>
+<summary>Details</summary>
+# Gravitee in prod
+## Getting started
+
+- get up from bed
+- brush teeth
+
+</details>
+
+- api@spec: write OpenAPI specifications
 
 <details>
 <summary>UNFINISHED</summary>

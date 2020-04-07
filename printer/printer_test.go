@@ -35,6 +35,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 						Labels: []trello.Label{
 							trello.Label{Name: "WORK"},
 						},
+						Desc: "# Gravitee in prod\n## Getting started\n\n- get up from bed\n- brush teeth",
 					},
 					trello.Card{
 						Name: "api@spec: write OpenAPI specifications",
@@ -62,6 +63,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 						Labels: []trello.Label{
 							trello.Label{Name: "WORK"},
 						},
+						Desc: "# Foo\n\n> Foobar",
 					},
 				},
 			},
@@ -78,6 +80,18 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 **WORK**
 
 - api@gravitee: install in prod environment
+
+<details>
+<summary>description</summary>
+
+# Gravitee in prod
+## Getting started
+
+- get up from bed
+- brush teeth
+
+</details>
+
 - api@spec: write OpenAPI specifications
 
 <details>
@@ -91,6 +105,16 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 - projectA@taskA: study solutions
 - projectB@taskB: implement solution
+
+<details>
+<summary>description</summary>
+
+# Foo
+
+> Foobar
+
+</details>
+
 
 </details>
 

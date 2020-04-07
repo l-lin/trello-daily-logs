@@ -3,6 +3,7 @@ package trello
 // Card in trello
 type Card struct {
 	Name   string `json:"name"`
+	Desc   string `json:"desc"`
 	Labels []Label
 }
 
