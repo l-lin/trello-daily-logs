@@ -11,20 +11,21 @@ import (
 const (
 	cardsTpl = `{{define "cards"}}{{range $k, $v := .}}
 **{{$k}}**
-
-{{range $v}}- {{.Name}}{{if .Desc}}
-
+{{range $v}}{{if .Desc}}
 <details>
-<summary>description</summary>
+<summary>{{.Name}}</summary>
 
 {{.Desc}}
 
 </details>
-{{end}}
-{{end}}{{end}}{{end}}`
+{{else}}
+&nbsp;&nbsp;&nbsp; {{.Name}}
+{{end}}{{end}}{{end}}{{end}}`
 
 	allCardsTpl = `## {{.T.Weekday}} {{printf "%02d" .T.Day}}
-{{if .DoneMap}}{{template "cards" .DoneMap}}{{end}}
+{{if .DoneMap}}{{template "cards" .DoneMap}}{{if .TodoMap}}
+---
+{{end}}{{end}}
 {{if .TodoMap}}<details>
 <summary>UNFINISHED</summary>
 {{template "cards" .TodoMap}}

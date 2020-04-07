@@ -31,6 +31,12 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 						},
 					},
 					trello.Card{
+						Name: "career: find good path",
+						Labels: []trello.Label{
+							trello.Label{Name: "PERSO"},
+						},
+					},
+					trello.Card{
 						Name: "api@gravitee: install in prod environment",
 						Labels: []trello.Label{
 							trello.Label{Name: "WORK"},
@@ -71,18 +77,18 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 **ABANDONED**
 
-- api@spec: write OpenAPI specifications
+&nbsp;&nbsp;&nbsp; api@spec: write OpenAPI specifications
 
 **PERSO**
 
-- career@interview: find good questions for interview
+&nbsp;&nbsp;&nbsp; career@interview: find good questions for interview
+
+&nbsp;&nbsp;&nbsp; career: find good path
 
 **WORK**
 
-- api@gravitee: install in prod environment
-
 <details>
-<summary>description</summary>
+<summary>api@gravitee: install in prod environment</summary>
 
 # Gravitee in prod
 ## Getting started
@@ -92,29 +98,29 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 </details>
 
-- api@spec: write OpenAPI specifications
+&nbsp;&nbsp;&nbsp; api@spec: write OpenAPI specifications
+
+---
 
 <details>
 <summary>UNFINISHED</summary>
 
 **PERSO**
 
-- shopping: buy milk
+&nbsp;&nbsp;&nbsp; shopping: buy milk
 
 **WORK**
 
-- projectA@taskA: study solutions
-- projectB@taskB: implement solution
+&nbsp;&nbsp;&nbsp; projectA@taskA: study solutions
 
 <details>
-<summary>description</summary>
+<summary>projectB@taskB: implement solution</summary>
 
 # Foo
 
 > Foobar
 
 </details>
-
 
 </details>
 
@@ -136,7 +142,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 **PERSO**
 
-- career@interview: find good questions for interview
+&nbsp;&nbsp;&nbsp; career@interview: find good questions for interview
 
 `,
 		},
@@ -159,7 +165,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 **PERSO**
 
-- career@interview: find good questions for interview
+&nbsp;&nbsp;&nbsp; career@interview: find good questions for interview
 
 </details>
 
