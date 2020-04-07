@@ -52,14 +52,7 @@ This CLI is used to:
 
 &nbsp;&nbsp;&nbsp; projectA@taskA: study solutions
 
-<details>
-<summary>projectB@taskB: implement solution</summary>
-
-# Foo
-
-> Foobar
-
-</details>
+&nbsp;&nbsp;&nbsp; projectB@taskB: implement solution
 
 </details>
 

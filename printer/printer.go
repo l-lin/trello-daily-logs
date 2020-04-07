@@ -9,6 +9,13 @@ import (
 )
 
 const (
+	cardsWithoutDetailsTpl = `{{define "cardsWithoutDetails"}}{{range $k, $v := .}}
+**{{$k}}**
+{{range $v}}
+&nbsp;&nbsp;&nbsp; {{.Name}}
+{{end}}{{end}}{{end}}
+`
+
 	cardsTpl = `{{define "cards"}}{{range $k, $v := .}}
 **{{$k}}**
 {{range $v}}{{if .Desc}}
@@ -28,7 +35,7 @@ const (
 {{end}}{{end}}
 {{if .TodoMap}}<details>
 <summary>UNFINISHED</summary>
-{{template "cards" .TodoMap}}
+{{template "cardsWithoutDetails" .TodoMap}}
 </details>
 
 {{end}}`
@@ -57,6 +64,7 @@ func (p MarkdownPrinter) Print(writer io.Writer, doneCards, todoCards []trello.C
 
 	tpl := template.Must(template.New("all-cards").Parse(allCardsTpl))
 	tpl = template.Must(tpl.Parse(cardsTpl))
+	tpl = template.Must(tpl.Parse(cardsWithoutDetailsTpl))
 	tplParams := struct {
 		T       time.Time
 		DoneMap map[string][]trello.Card

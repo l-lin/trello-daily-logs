@@ -113,14 +113,7 @@ func TestMarkdownPrinter_Print(t *testing.T) {
 
 &nbsp;&nbsp;&nbsp; projectA@taskA: study solutions
 
-<details>
-<summary>projectB@taskB: implement solution</summary>
-
-# Foo
-
-> Foobar
-
-</details>
+&nbsp;&nbsp;&nbsp; projectB@taskB: implement solution
 
 </details>
 
