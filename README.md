@@ -12,22 +12,23 @@ This CLI is used to:
 - append/prepend today's content into a file `/path/to/daily-logs/2020/02.md`:
 
 ```md
-## Thursday 06
+## Sunday 09
 
 **ABANDONED**
 
-- api@spec: write OpenAPI specifications
+&nbsp;&nbsp;&nbsp; api@spec: write OpenAPI specifications
 
 **PERSO**
 
-- career@interview: find good questions for interview
+&nbsp;&nbsp;&nbsp; career@interview: find good questions for interview
+
+&nbsp;&nbsp;&nbsp; career: find good path
 
 **WORK**
 
-- api@gravitee: install in prod environment
-
 <details>
-<summary>Details</summary>
+<summary>api@gravitee: install in prod environment</summary>
+
 # Gravitee in prod
 ## Getting started
 
@@ -36,19 +37,29 @@ This CLI is used to:
 
 </details>
 
-- api@spec: write OpenAPI specifications
+&nbsp;&nbsp;&nbsp; api@spec: write OpenAPI specifications
+
+---
 
 <details>
 <summary>UNFINISHED</summary>
 
 **PERSO**
 
-- shopping: buy milk
+&nbsp;&nbsp;&nbsp; shopping: buy milk
 
 **WORK**
 
-- projectA@taskA: study solutions
-- projectB@taskB: implement solution
+&nbsp;&nbsp;&nbsp; projectA@taskA: study solutions
+
+<details>
+<summary>projectB@taskB: implement solution</summary>
+
+# Foo
+
+> Foobar
+
+</details>
 
 </details>
 
