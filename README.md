@@ -81,8 +81,7 @@ trello-daily-logs
 Add to the crontab:
 
 ```bash
-# If you want to directly write into a file
-55 17 * * 1-4 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /tmp/trello-daily-logs.log
-55 16 * * 5 /home/llin/go/bin/trello-daily-logs -f file 1> /dev/null 2> /tmp/trello-daily-logs.log
+25 18 * * 1-5 /home/llin/.asdf/shims/trello-daily-logs -f file 1> /dev/null 2> /tmp/trello-daily-logs.log
+26 18 * * 1-5 /home/llin/perso/trello-daily-logs/commit.sh 1> /dev/null 2> /tmp/trello-daily-logs.commit.log
 ```
 
